@@ -5,7 +5,7 @@ Action for getting latest release's version of a repository
 - name: Get latest release's version(tag_name) of \
     `https://github.com/actions/runner` using action
   id: get-version-action
-  uses: fangqiuming/latest-release-version@v1
+  uses: fangqiuming/latest-release-version@v1.x
   with:
     repository: actions/runner
     token: ${{ secrets.GITHUB }}
