@@ -31,4 +31,4 @@ Action for getting latest release's version of a repository, customized property
 | Output Name | Description                                                                                    |
 |-------------|------------------------------------------------------------------------------------------------|
 | tag_name    | Tag name of the `repository`'s latest release. For example, `v2.289.1`                         |
-| version     | Version value based on preferred `property` name                                               |
+| version     | Version value based on preferred `property` name. Output `v0.0.0` if repository has no release |

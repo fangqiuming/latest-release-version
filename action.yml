@@ -35,6 +35,8 @@ runs:
         RESPONSE=$(curl -s --header 'authorization: Bearer ${{ inputs.token }}' "https://api.github.com/repos/${{ inputs.repository }}/releases/latest")
         TAG_NAME=$(echo "$RESPONSE" | grep "\"tag_name\":" | sed -E 's/.*"([^"]+)".*/\1/')
         VERSION=$(echo "$RESPONSE" | grep "\"${{ inputs.property }}\":" | sed -E 's/.*"([^"]+)".*/\1/')
+        TAG_NAME="${TAG_NAME:=v0.0.0}"
+        VERSION="${VERSION:=v0.0.0}"
         echo "TAG_NAME: $TAG_NAME"
         echo "VERSION: $VERSION"
         echo "::set-output name=tag_name::$(echo $TAG_NAME)"
