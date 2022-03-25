@@ -11,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: get-version-action
-      name: Get latest release tag name of `actions/runner` using action
+      name: Get latest release's `tag_name` of `actions/runner` using action
       uses: fangqiuming/latest-release-version@main
       with:
         repository: actions/runner
     - id: get-version-curl
-      name: Get latest release tag name of `actions/runner` using cURL
+      name: Get latest release's `tag_name` of `actions/runner` using cURL
       shell: bash
       run: |
         URL=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/actions/runner/releases/latest)
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: get-version-action
-      name: Get latest release tag name of `fangqiuming/open` using action
+      name: Get latest release's `tag_name` of `fangqiuming/open` using action
       uses: fangqiuming/latest-release-version@main
       with:
         repository: fangqiuming/open
