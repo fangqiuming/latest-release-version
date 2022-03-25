@@ -1,0 +1,29 @@
+name: 'Latest Release Version'
+description: "Get latest release's tag name of a repository"
+author: 'fangqiuming'
+inputs:
+  repository:
+    required: false
+    description: 'Repository name with owner. For example, actions/runner'
+    default: ${{ github.repository }}
+  token:
+    required: false
+    description: >
+      Personal access token (PAT) used to read the repository.
+      We recommend using a service account with the least permissions necessary.
+      Also when generating a new PAT, select the least scopes necessary.
+      [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+    default: ${{ github.token }}
+outputs:
+  tag_name:
+    description: "Tag name of the repository's latest release"
+    value: ${{ steps.main.outputs.tag_name }}
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        TAG_NAME=$(curl -s --header 'authorization: Bearer ${{ inputs.token }}' "https://api.github.com/repos/${{ inputs.repository }}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        echo "TAG_NAME: $TAG_NAME"
+        echo "::set-output name=tag_name::$(echo $TAG_NAME)"
+      shell: bash
+      id: main
