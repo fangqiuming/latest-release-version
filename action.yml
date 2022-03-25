@@ -17,16 +17,27 @@ inputs:
       Also when generating a new PAT, select the least scopes necessary.
       [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
     default: ${{ github.token }}
+  property:
+    required: false
+    description: Property name refers to version in [response object](https://docs.github.com/en/rest/reference/releases#get-the-latest-release)
+    default: tag_name
 outputs:
   tag_name:
     description: Tag name of the repository's latest release
     value: ${{ steps.main.outputs.tag_name }}
+  version:
+    description: Version value based on preferred property name
+    value: ${{ steps.main.outputs.version }}
 runs:
   using: composite
   steps:
     - run: |
-        TAG_NAME=$(curl -s --header 'authorization: Bearer ${{ inputs.token }}' "https://api.github.com/repos/${{ inputs.repository }}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        RESPONSE=$(curl -s --header 'authorization: Bearer ${{ inputs.token }}' "https://api.github.com/repos/${{ inputs.repository }}/releases/latest")
+        TAG_NAME=$(echo $RESPONSE | grep "\"tag_name\":" | sed -E 's/.*"([^"]+)".*/\1/')
+        VERSION=$(echo $RESPONSE | grep "\"${{ inputs.property }}\":" | sed -E 's/.*"([^"]+)".*/\1/')
         echo "TAG_NAME: $TAG_NAME"
+        echo "VERSION: $VERSION"
         echo "::set-output name=tag_name::$(echo $TAG_NAME)"
+        echo "::set-output name=version::$(echo $VERSION)"
       shell: bash
       id: main
