@@ -1,0 +1,46 @@
+name: Test
+
+on:
+  push:
+   branches:
+     - "main"
+  workflow_dispatch:
+
+jobs:
+  test-on-public-repo:
+    runs-on: ubuntu-latest
+    steps:
+    - id: get-version-action
+      name: Get latest release tag name of `actions/runner` using action
+      uses: fangqiuming/latest-release-version@main
+      with:
+        repository: actions/runner
+    - id: get-version-curl
+      name: Get latest release tag name of `actions/runner` using cURL
+      shell: bash
+      run: |
+        URL=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/actions/runner/releases/latest)
+        TAG_NAME=${URL##*/}
+        echo "TAG_NAME: $TAG_NAME"
+        echo "::set-output name=tag_name::$(echo ${URL##*/})"
+    - name: A/B Check
+      if: steps.get-version-action.outputs.tag_name != steps.get-version-curl.outputs.tag_name
+      uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed("${{ steps.get-version-action.outputs.tag_name }} and ${{ steps.get-version-curl.outputs.tag_name }} are not equivalent!')
+  test-on-private-repo:
+    runs-on: ubuntu-latest
+    steps:
+    - id: get-version-action
+      name: Get latest release tag name of `fangqiuming/open` using action
+      uses: fangqiuming/latest-release-version@main
+      with:
+        repository: fangqiuming/open
+        token: ${{ secrets.REPO }}
+    - name: A/B Check
+      if: steps.get-version-action.outputs.tag_name != '0.1'
+      uses: actions/github-script@v3
+      with:
+        script: |
+          core.setFailed("${{ steps.get-version-action.outputs.tag_name }} and 0.1 are not equivalent!')
