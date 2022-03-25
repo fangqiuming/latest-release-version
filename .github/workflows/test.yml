@@ -19,16 +19,18 @@ jobs:
       name: Get latest release's `tag_name` of `actions/runner` using cURL
       shell: bash
       run: |
-        URL=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/actions/runner/releases/latest)
+        URL=$(curl -Ls -o /dev/null -w %{url_effective} \
+        https://github.com/actions/runner/releases/latest)
         TAG_NAME=${URL##*/}
         echo "TAG_NAME: $TAG_NAME"
-        echo "::set-output name=tag_name::$(echo ${URL##*/})"
+        echo "::set-output name=tag_name::$(echo $TAG_NAME)"
     - name: A/B Check
       if: steps.get-version-action.outputs.tag_name != steps.get-version-curl.outputs.tag_name
       uses: actions/github-script@v3
       with:
         script: |
-          core.setFailed("${{ steps.get-version-action.outputs.tag_name }} and ${{ steps.get-version-curl.outputs.tag_name }} are not equivalent!')
+          core.setFailed("${{ steps.get-version-action.outputs.tag_name }} \
+          and ${{ steps.get-version-curl.outputs.tag_name }} are not equivalent!')
   test-on-private-repo:
     runs-on: ubuntu-latest
     steps:
@@ -43,4 +45,5 @@ jobs:
       uses: actions/github-script@v3
       with:
         script: |
-          core.setFailed("${{ steps.get-version-action.outputs.tag_name }} and 0.1 are not equivalent!')
+          core.setFailed("${{ steps.get-version-action.outputs.tag_name }} \
+          and 0.1 are not equivalent!')
