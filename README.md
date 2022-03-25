@@ -2,7 +2,8 @@
 Action for getting latest release's version of a repository
 # Usage
 ```yaml
-- name: Get latest release's version(`tag_name`) of `actions/runner` using action
+- name: Get latest release's version(tag_name) of \
+    `https://github.com/actions/runner` using action
   id: get-version-action
   uses: fangqiuming/latest-release-version@v1
   with:
@@ -12,7 +13,7 @@ Action for getting latest release's version of a repository
     if: steps.get-version-action.outputs.version != 'v2.289.1'
     uses: actions/github-script@v3
     with:
-    script: |
+      script: |
         core.setFailed("${{ steps.get-version-action.outputs.version }} \
         and v2.289.1 are not equivalent!')
 ```
