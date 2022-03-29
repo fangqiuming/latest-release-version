@@ -31,23 +31,25 @@ jobs:
         script: |
           core.setFailed("${{ steps.get-version-action.outputs.tag_name }} \
           and ${{ steps.get-version-curl.outputs.tag_name }} are not equivalent!')
-  test-on-private-repo:
+  test-on-private-repo-include-pre-release:
     runs-on: ubuntu-latest
     steps:
     - id: get-version-action
-      name: Get latest release's version(created_at) of `fangqiuming/open`
+      name: Get latest release or prerelease's version(published_at) \
+        of `fangqiuming/open`
       uses: fangqiuming/latest-release-version@main
       with:
         repository: fangqiuming/open
         token: ${{ secrets.REPO }}
-        property: created_at
+        property: published_at
+        include_pre: 'true'
     - name: A/B Check
-      if: steps.get-version-action.outputs.version != '2020-12-10T11:12:58Z'
+      if: steps.get-version-action.outputs.version != '2022-03-29T09:10:06Z'
       uses: actions/github-script@v3
       with:
         script: |
           core.setFailed("${{ steps.get-version-action.outputs.version }} \
-          and 2020-12-10T11:12:58Z are not equivalent!')
+          and 2022-03-29T09:10:06Z are not equivalent!')
   test-on-repo-with-no-release:
     runs-on: ubuntu-latest
     steps:

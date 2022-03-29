@@ -23,6 +23,7 @@ Action for getting latest release's version of a repository, customized property
 | repository  | Repository name with owner. For example, `actions/runner`         | `${{ github.repository }}` |
 | token       | [`Personal access token (PAT)`][PAT] used to read the repository  | `${{ github.token }}`      |
 | property    | Property name refers to version in [response object][RESPONSE]    | `tag_name`                 |
+| include_pre | Should pre-release be included.                                   | `'false'`                  |
 
 [PAT]: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets
 [RESPONSE]: https://docs.github.com/en/rest/reference/releases#get-the-latest-release
