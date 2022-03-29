@@ -3,7 +3,7 @@ name: Test
 on:
   push:
    branches:
-     - "main"
+     - "v1.2"
   workflow_dispatch:
 
 jobs:
