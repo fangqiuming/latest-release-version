@@ -37,11 +37,17 @@ runs:
   using: composite
   steps:
     - run: |
-        FILTER='.prerelease=false'
-        if [[ include_pre == 'true' ]]; then FILTER='true'; fi
-        TAG_NAME=$(jq -r "map(select($FILTER)) | first | .tag_name} // 'v0.0.0'" <<< $(curl -s --header 'authorization: Bearer ${{ inputs.token }}' https://api.github.com/repos/${{ inputs.repository }}/releases))
+        RESPONSE=$(curl -s --header 'authorization: Bearer ${{ inputs.token }}' https://api.github.com/repos/${{ inputs.repository }}/releases)
+        if [[ $(jq -r '.[] | .created_at?' << $RESPONSE |  wc -l) -gt 0 ]]; then
+          FILTER='.prerelease=false'
+          if [[ include_pre == 'true' ]]; then FILTER='true'; fi
+          TAG_NAME= $(jq -r "map(select($FILTER)) | first | .tag_name}" <<< $RESPONSE)
+          VERSION= $(jq -r "map(select($FILTER)) | first | .${{ inputs.property }}" <<< $RESPONSE)
+        else
+          TAG_NAME=v0.0.0
+          VERSION=v0.0.0
+        fi
         echo "TAG_NAME: $TAG_NAME"
-        VERSION=$(jq -r "map(select($FILTER)) | first | .${{ inputs.property }} // 'v0.0.0'" <<< $(curl -s --header 'authorization: Bearer ${{ inputs.token }}' https://api.github.com/repos/${{ inputs.repository }}/releases))
         echo "VERSION: $VERSION"
         echo "::set-output name=tag_name::$(echo $TAG_NAME)"
         echo "::set-output name=version::$(echo $VERSION)"
