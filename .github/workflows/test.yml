@@ -12,7 +12,7 @@ jobs:
     steps:
     - id: get-version-action
       name: Get latest release's version of `actions/runner` using action
-      uses: fangqiuming/latest-release-version@main
+      uses: fangqiuming/latest-release-version@v1.2
       with:
         repository: actions/runner
     - id: get-version-curl
@@ -37,7 +37,7 @@ jobs:
     - id: get-version-action
       name: Get latest release or prerelease's version(published_at) \
         of `fangqiuming/open`
-      uses: fangqiuming/latest-release-version@main
+      uses: fangqiuming/latest-release-version@v1.2
       with:
         repository: fangqiuming/open
         token: ${{ secrets.REPO }}
@@ -55,7 +55,7 @@ jobs:
     steps:
     - id: get-version-action
       name: Get latest release of `fangqiuming/stellaris_cn`
-      uses: fangqiuming/latest-release-version@main
+      uses: fangqiuming/latest-release-version@v1.2
       with:
         repository:  fangqiuming/stellaris_cn 
     - name: A/B Check
