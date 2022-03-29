@@ -4,7 +4,7 @@ Action for getting latest release's **`tag name`** of a repository
 ```yaml
 - name: Get latest release's tag_name of `actions/runner` using action
   id: get-version-action
-  uses: fangqiuming/latest-release-version@v1
+  uses: fangqiuming/latest-release-version@v1.0.x
   with:
     repository: actions/runner
     token: ${{ secrets.GITHUB }}
